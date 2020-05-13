@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/account"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title size="small" class="ion-padding-start-small">
+      Profil
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="save()" [disabled]="!formFactoryIsvalid || isSaveLoading">
+        <ion-icon name="checkmark" slot="start"></ion-icon>
+        Simpan
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-top">
+  <div *ngIf="isLoading" class="d-flex w-100 h-100 align-items-center justify-content-center">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <form *ngIf="!isLoading" [formGroup]="formFactory" (ngSubmit)="onSubmit()" #f="ngForm">
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-label position="floating">Nama Lengkap</ion-label>
+        <ion-input formControlName="first_name" pattern="[a-zA-Z ]*" autocapitalize="true"
+          placeholder="Nama lengkap sesuai KTP"></ion-input>
+      </ion-item>
+
+      <div *ngIf="fmControl.first_name.errors?.minlength" class="ion-padding-start ion-padding-end">
+        <ion-text color="danger"><small>Minimal 4 huruf.</small></ion-text>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-label position="floating">Tentang Saya</ion-label>
+        <ion-textarea formControlName="biography" rows="3" autoGrow="true" placeholder="Siapa Anda?"></ion-textarea>
+      </ion-item>
+    </div>
+  </form>
+</ion-content>

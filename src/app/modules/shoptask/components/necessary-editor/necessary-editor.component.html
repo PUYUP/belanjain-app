@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title size="small" class="ion-padding-start-small">Tambah Kebutuhan</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="save()" [disabled]="!formFactoryIsvalid || isSaveLoading">
+        <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+        <span>Simpan</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-top">
+  <form [formGroup]="formFactory" (ngSubmit)="onSubmit()" #f="ngForm">
+    <ion-item lines="full" class="mb-2">
+      <ion-label position="floating">Nama Kebutuhan</ion-label>
+      <ion-input formControlName="label" placeholder="Contoh: Dapur, Camilan, Mandi"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-label position="floating">Catatan</ion-label>
+      <ion-textarea formControlName="description" rows="3" autoGrow="true" placeholder="Keterangan tambahan (jika ada)"></ion-textarea>
+    </ion-item>
+  </form>
+</ion-content>

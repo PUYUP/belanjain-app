@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/register"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title size="small" class="ion-padding-start-small">Masuk</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/register']">
+        <ion-icon name="person-add" slot="start"></ion-icon>
+        Daftar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="ion-padding">
+    <ion-text color="muted">
+      Buka akun Anda dan mulai belanja.
+    </ion-text>
+  </div>
+
+  <form [formGroup]="formFactory" (ngSubmit)="onSubmit()">
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-icon name="at" slot="start" class="mr-3"></ion-icon>
+        <ion-label position="floating">Nama Pengguna / Nomor Ponsel</ion-label>
+        <ion-input inputmode="tel" formControlName="telephone"></ion-input>
+      </ion-item>
+    </div>
+
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-icon name="key" slot="start" class="mr-3"></ion-icon>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input type="password" inputmode="password" formControlName="password"></ion-input>
+      </ion-item>
+
+      <div *ngIf="fmControl.password.errors?.minlength && !fmControl.password.errors?.mustMatch" class="ion-padding-start ion-padding-end">
+        <ion-text color="danger"><small>Minimal 6 karakter.</small></ion-text>
+      </div>
+    </div>
+
+    <ion-button type="submit" expand="block" class="ion-margin" [disabled]="!formFactory.valid || isLoading || isLoginLoading">
+      <ion-text *ngIf="!isLoading && !isLoginLoading">Masuk</ion-text>
+      <ion-spinner *ngIf="isLoading || isLoginLoading"></ion-spinner>
+    </ion-button>
+  </form>
+</ion-content>

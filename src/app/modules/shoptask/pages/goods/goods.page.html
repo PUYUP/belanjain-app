@@ -1,0 +1,126 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/purchase/{{ purchaseUUID }}"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title *ngIf="!isLoading && itemData" size="small" class="ion-padding-start-small">
+      {{ necessary.label }} &mdash; {{ purchase.label }}
+    </ion-title>
+
+    <ion-title *ngIf="isLoading" size="small" class="ion-padding-start-small">
+      Memuat...
+    </ion-title>
+
+    <ion-buttons *ngIf="!isLoading && itemData" slot="end" class="ion-margin-end">
+      <ion-button *ngIf="purchase.status === 'draft'" (click)="moreAction()">
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+
+      <ion-button *ngIf="purchase.status !== 'draft'" (click)="refresh()">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section *ngIf="!isLoading && itemData">
+    <section *ngIf="necessary.description">
+      <ion-item-divider color="light">
+        <ion-label>Catatan</ion-label>
+      </ion-item-divider>
+
+      <ion-item lines="full">
+        <ion-label class="ion-text-wrap">
+          {{ necessary.description }}
+        </ion-label>
+      </ion-item>
+    </section>
+
+    <ion-item-divider *ngIf="purchase.status === 'done'" color="light">
+      <ion-label class="w-100 ion-padding-end">
+        <div class="d-flex w-100">
+          <span class="mr-auto">Ringkasan Belanja</span>
+          <span>Rp 56.750</span>
+        </div>
+      </ion-label>
+    </ion-item-divider>
+
+    <ion-item-divider *ngIf="purchase.status === 'draft'" color="light">
+      <ion-label>Tambahkan Barang</ion-label>
+    </ion-item-divider>
+
+    <ion-item *ngIf="purchase.status === 'draft'" lines="full">
+      <ion-row [ngStyle]="{'width': '100%'}">
+        <ion-col [ngStyle]="{'padding-left': 0}">
+          <ion-button expand="block" color="medium" [routerLink]="['/purchase', purchaseUUID, 'necessary', necessaryUUID, 'goods', 'catalog']">
+            Dari Katalog
+          </ion-button>
+        </ion-col>
+
+        <ion-col [ngStyle]="{'padding-right': 0}">
+          <ion-button expand="block" color="medium" (click)="createGoods()">
+            Input Sendiri
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+  </section>
+
+  <ion-list *ngIf="!isLoading && itemData" class="ion-no-padding">
+    <ion-item *ngFor="let item of itemList" lines="full">
+      <ion-thumbnail *ngIf="item.picture" slot="start">
+        <img src="{{ item.picture }}">
+      </ion-thumbnail>
+
+      <ion-label class="ion-text-wrap">
+        <p><ion-text color="dark"><strong>{{ item.label }}</strong></ion-text></p>
+        <p>
+          <ion-text>
+            {{ item.quantity }} {{ item.metric_display }}
+            <span *ngIf="item.is_done">
+              x Rp {{ item.price }} <br />
+              Total Rp {{ item.price * item.quantity }}
+            </span>
+          </ion-text>
+        </p>
+        <p *ngIf="item.description">
+          <ion-text color="medium"><u>Catatan:</u> {{ item.description }}</ion-text>
+        </p>
+      </ion-label>
+      
+      <ion-note *ngIf="purchase.status === 'draft'" slot="end" [ngStyle]="{'margin-left': 0, 'padding-left': 0}">
+        <ion-button fill="clear" color="danger" class="ion-no-border"
+          (click)="selectItem(item, true)">
+          <ion-icon slot="icon-only" name="trash-bin-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button fill="clear" color="medium"
+          [ngStyle]="{'width': '50px', 'margin-left': '5px'}"
+          (click)="selectItem(item)">Edit
+        </ion-button>
+      </ion-note>
+
+      <ion-note *ngIf="purchase.status === 'processed'" slot="end" [ngStyle]="{'margin-left': 0, 'padding-left': 0}">
+        <ion-text *ngIf="purchase.status === 'processed' && item.is_done == true" class="ion-margin-start" color="success">Terbeli</ion-text>
+        <ion-text *ngIf="purchase.status === 'processed' && item.is_done == false" class="ion-margin-start" color="dark">Dicari</ion-text>
+      </ion-note>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll *ngIf="itemData && itemData.count > itemData.per_page && itemList && !isLoading" threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Memuat berikutnya...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <div *ngIf="isLoading" class="p-4 d-flex justify-content-center w-100">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && itemData && !itemList" class="ion-padding">
+    Tidak ada barang.
+  </div>
+</ion-content>

@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
+import { LoginRequiredGuard } from '../guards/login-required.guard';
+import { PurchasePage } from '../modules/shoptask/pages/purchase/purchase.page';
+import { HistoryPage } from '../modules/shoptask/pages/history/history.page';
+import { AccountPage } from '../modules/person/pages/account/account.page';
 
 const routes: Routes = [
   {
@@ -8,27 +12,33 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'tab1',
-        loadChildren: () => import('../tab1/tab1.module').then(m => m.Tab1PageModule)
+        path: 'purchase',
+        canActivate: [LoginRequiredGuard],
+        component: PurchasePage,
+        // loadChildren: () => import('../modules/shoptask/pages/purchase/purchase.module').then(m => m.PurchasePageModule)
       },
       {
-        path: 'tab2',
-        loadChildren: () => import('../tab2/tab2.module').then(m => m.Tab2PageModule)
+        path: 'history',
+        canActivate: [LoginRequiredGuard],
+        component: HistoryPage,
+        // loadChildren: () => import('../modules/shoptask/pages/history/history.module').then(m => m.HistoryPageModule)
       },
       {
-        path: 'tab3',
-        loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+        path: 'account',
+        canActivate: [LoginRequiredGuard],
+        component: AccountPage,
+        // loadChildren: () => import('../modules/person/pages/account/account.module').then(m => m.AccountPageModule)
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tabs/purchase',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: '/tabs/purchase',
     pathMatch: 'full'
   }
 ];

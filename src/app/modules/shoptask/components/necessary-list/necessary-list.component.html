@@ -1,0 +1,28 @@
+<ion-list *ngIf="!isLoading && itemList" class="p-0 m-0">
+  <ion-item *ngFor="let item of itemList" [routerLink]="['/purchase', purchase.uuid, 'necessary', item.uuid, 'goods']"
+    lines="full" detail>
+    <ion-label class="ion-text-wrap">
+      <strong>{{ item.label }}</strong>
+    </ion-label>
+
+    <ion-note slot="end">
+      {{ item.total_count }} barang
+      <span *ngIf="status.includes(purchase.status) && item.total_count > 0">/ {{ item.done_count }} terbeli</span>
+    </ion-note>
+  </ion-item>
+</ion-list>
+
+<ion-infinite-scroll *ngIf="itemData && itemData.count > itemData.per_page && itemList && !isLoading" threshold="50%" (ionInfinite)="loadMore($event)">
+  <ion-infinite-scroll-content
+    loadingSpinner="bubbles"
+    loadingText="Memuat berikutnya...">
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>
+
+<ion-item *ngIf="!isLoading && itemData.count == 0 && purchase.status === 'draft'" lines="full">
+  Belum ada kebutuhan, tap tombol "+" untuk menambahkan.
+</ion-item>
+
+<ion-item *ngIf="isLoading" lines="full">
+  <ion-spinner name="dots"></ion-spinner>
+</ion-item>

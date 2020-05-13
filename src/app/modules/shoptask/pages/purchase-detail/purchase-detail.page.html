@@ -1,0 +1,133 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/purchase"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title size="small" class="ion-padding-start-small">Rincian Belanja</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button *ngIf="!isLoading && purchase && purchase.status === 'draft'" (click)="sendToOperator()"
+        class="ion-button-normal" fill="clear" [disabled]="isSaveLoading">
+        <ion-icon slot="start" name="bicycle"></ion-icon>
+        Kirim ke Operator
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="isLoading" class="p-4 d-flex align-items-center justify-content-center h-100">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ion-list *ngIf="!isLoading && purchase" class="ion-no-padding">
+    <ion-item-divider lines="full" color="{{ purchase.status === 'done' ? 'success' : (purchase.status === 'processed' ? 'warning' : 'dark') }}">
+      <ion-label class="ion-text-wrap">
+        <strong>{{ purchase.label }}</strong>
+        <div [ngStyle]="{'margin-top.px': 2}">
+          {{ purchase.schedule|date: 'EE, dd MMMM yyyy' }}
+          
+          <ion-text class="ion-margin-start">
+            {{ purchase.status_display }}
+          </ion-text>
+        </div>
+      </ion-label>
+
+      <ion-button *ngIf="purchase.status === 'draft'" (click)="changePurchase()" slot="end" color="warning" class="ion-margin-end">
+        Rubah
+      </ion-button>
+    </ion-item-divider>
+
+    <section *ngIf="purchase.has_operator && purchase.status !== 'draft'">
+      <ion-item-divider lines="full" color="light">
+        Operator belanja Anda
+      </ion-item-divider>
+
+      <ion-item *ngFor="let item of purchase.purchase_assigneds" button (click)="callOperator(item.operator)" lines="full">
+        <ion-avatar slot="start">
+          <img *ngIf="!item.operator.picture" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==">
+          <img *ngIf="item.operator.picture" src="{{ item.operator.picture }}">
+        </ion-avatar>
+
+        <ion-label>
+          <strong>{{ item.operator.first_name ? item.operator.first_name : item.operator.username }}</strong>
+          <p *ngIf="item.operator.telephone" class="mb-0">WhatsApp: {{ item.operator.telephone }}</p>
+        </ion-label>
+
+        <ion-icon name="call-outline" slot="end"></ion-icon>
+      </ion-item>    
+    </section>
+
+    <ion-item-divider *ngIf="purchase.status === 'draft'" button lines="full" color="light" (click)="createNecessary()">
+      <ion-label>
+        Daftar Kebutuhan
+      </ion-label>
+
+      <ion-button slot="end" class="ion-margin-end">
+        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-item-divider>
+
+    <necessary-list-component [purchase]="purchase"></necessary-list-component>
+
+    <section *ngIf="purchase.description">
+      <ion-item-divider color="light" lines="full">
+        <ion-label>Catatan</ion-label>
+      </ion-item-divider>
+
+      <ion-item lines="full">
+        <ion-label class="ion-text-wrap">
+          {{ purchase.description }}
+        </ion-label>
+      </ion-item>
+    </section>
+
+    <section *ngIf="purchase.has_shipping">
+      <ion-item-divider color="light" lines="full">
+        <ion-label>Alamat Pengiriman</ion-label>
+      </ion-item-divider>
+
+      <ion-item *ngFor="let item of purchase.purchase_shippings; let last = last;" lines="{{ last && purchase.status !== 'rejected' && purchase.status !== 'draft' ? 'none' : 'full'}}">
+        <ion-label class="ion-text-wrap">
+          <p><strong>{{ item.shipping_to.label }}</strong></p>
+          <p>{{ item.shipping_to.address }}</p>
+          
+          <div *ngIf="item.shipping_to.recipient" class="d-flex w-100 align-items-center mt-2">
+            <div class="mr-auto">
+              <p><strong>Penerima</strong></p>
+              <p>{{ item.shipping_to.recipient }} ({{ item.shipping_to.telephone}})</p>
+            </div>
+
+            <div>
+              <ion-buttons>
+                <ion-button>
+                  <ion-icon name="call-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </div>
+          </div>
+
+          <p *ngIf="item.shipping_to.notes" class="mt-2"><strong>Catatan</strong></p>
+          <p *ngIf="item.shipping_to.notes">{{ item.shipping_to.notes }}</p>
+        </ion-label>
+      </ion-item>
+    </section>
+
+    <section *ngIf="purchase.status === 'rejected' || purchase.status === 'draft'">
+      <ion-item-divider color="light" lines="full">
+        <ion-label>Tindakan Penting</ion-label>
+      </ion-item-divider>
+
+      <ion-item lines="none">
+        <ion-label>Hapus belanja ini?</ion-label>
+        <ion-buttons slot="end">
+          <ion-button color="danger" class="ion-margin-end" fill="clear" size="small" (click)="delete()">
+            <ion-icon name="trash" slot="start"></ion-icon>
+            Ya, Hapus!
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </section>
+  </ion-list>
+</ion-content>

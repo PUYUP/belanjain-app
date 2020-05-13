@@ -1,0 +1,37 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title size="small">
+      Akun Saya
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="start" name="log-out" (click)="logout(personData.id)"></ion-icon>
+        <span>Keluar</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list class="ion-no-padding">
+    <ion-item-divider *ngIf="personData" color="light">
+      <ion-label>Halo {{ personData.first_name ? personData.first_name : personData.username }}</ion-label>
+    </ion-item-divider>
+
+    <ion-item [routerLink]="['/address']" lines="full" detail>
+      <ion-icon name="business" slot="start"></ion-icon>
+      <ion-label>Alamat Pengantaran</ion-label>
+    </ion-item>
+
+    <ion-item [routerLink]="['/profile']" lines="full" detail>
+      <ion-icon name="body" slot="start"></ion-icon>
+      <ion-label>Profil</ion-label>
+    </ion-item>
+
+    <ion-item [routerLink]="['/security']" lines="full" detail>
+      <ion-icon name="shield-checkmark" slot="start"></ion-icon>
+      <ion-label>Keamanan</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

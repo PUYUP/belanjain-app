@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title size="small" class="ion-padding-start-small">
+      {{ item ? 'Edit Alamat' : 'Tambah Alamat' }}
+    </ion-title>
+
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="save()" [disabled]="!formFactoryIsvalid || isLoading">
+        <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+        <span>Simpan</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-top">
+  <form [formGroup]="formFactory" (ngSubmit)="onSubmit()" #f="ngForm">
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-label position="floating">Nama Alamat</ion-label>
+        <ion-input formControlName="label" placeholder="Contoh: Rumah, Kantor, dll"></ion-input>
+      </ion-item>
+    </div>
+
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-label position="floating">Nama Penerima</ion-label>
+        <ion-input formControlName="recipient" placeholder="Isi Nama Lengkap"></ion-input>
+      </ion-item>
+    </div>
+
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-label position="floating">Nomor Telepon</ion-label>
+        <ion-input formControlName="telephone" inputmode="tel" pattern="[0-9 ]*"></ion-input>
+      </ion-item>
+
+      <div *ngIf="!fmControl.telephone.errors?.pattern && fmControl.telephone.errors?.minlength" class="ion-padding-start ion-padding-end">
+        <ion-text color="danger"><small>Minimal 8 angka.</small></ion-text>
+      </div>
+
+      <div *ngIf="fmControl.telephone.errors?.pattern" class="ion-padding-start ion-padding-end">
+        <ion-text color="danger"><small>Hanya boleh angka.</small></ion-text>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-label position="floating">Alamat Lengkap</ion-label>
+        <ion-textarea formControlName="address" rows="3" autoGrow="true" placeholder="Isi nama jalan, nomor rumah, nama gedung, dsb"></ion-textarea>
+      </ion-item>
+    </div>
+
+    <div class="mb-0">
+      <ion-item lines="full">
+        <ion-label position="floating">Kode Pos</ion-label>
+        <ion-input formControlName="postal_code" pattern="[0-9]*"></ion-input>
+      </ion-item>
+
+      <div *ngIf="fmControl.postal_code.errors?.pattern" class="ion-padding-start ion-padding-end">
+        <ion-text color="danger"><small>Hanya boleh angka.</small></ion-text>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-label>Tetapkan Jadi Alamat Utama</ion-label>
+        <ion-toggle formControlName="is_default"></ion-toggle>
+      </ion-item>
+    </div>
+
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-label position="floating">Catatan</ion-label>
+        <ion-textarea formControlName="notes" rows="3" autoGrow="true" placeholder="Keterangan tambahan (jika ada)"></ion-textarea>
+      </ion-item>
+    </div>
+  </form>
+</ion-content>

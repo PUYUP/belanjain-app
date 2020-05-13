@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title size="small" class="ion-padding-start-small">
+      {{ item ? 'Rubah Belanjaan' : 'Tambah Belanjaan' }}
+    </ion-title>
+
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="save()" [disabled]="!formFactoryIsvalid || isSaveLoading">
+        <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+        <span>Simpan</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-top">
+  <div *ngIf="isLoading" class="p-4 d-flex w-100 align-items-center justify-content-center">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <form *ngIf="!isLoading" [formGroup]="formFactory" (ngSubmit)="onSubmit()" #f="ngForm">
+    <ion-item lines="full" class="mb-2">
+      <ion-label position="floating">Nama Belanjaan</ion-label>
+      <ion-input formControlName="label" placeholder="Contoh: Belanja Mingguan, Belanja Pesta"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-label position="floating">Catatan</ion-label>
+      <ion-textarea class="pb-2" formControlName="description" rows="3" autoGrow="true" placeholder="Keterangan tambahan (jika ada)"></ion-textarea>
+    </ion-item>
+
+    <ion-item-divider color="light">
+      <ion-label>Jadwal Belanja</ion-label>
+    </ion-item-divider>
+
+    <ion-item>
+      <ion-label>Tanggal</ion-label>
+      <ion-datetime formControlName="date_picker" displayFormat="DD MMMM YYYY"
+        min="2020" max="2025" placeholder="Pilih Tanggal" display-timezone="Asia/Jakarta"></ion-datetime>
+    </ion-item>    
+
+    <ion-item>
+      <ion-label>Jam</ion-label>
+      <ion-datetime formControlName="time_picker" displayFormat="HH:mm" display-timezone="Asia/Jakarta"
+        placeholder="Pilih Jam"></ion-datetime>
+    </ion-item>   
+
+    <ion-item-divider color="light">
+      <ion-label>Alamat Pengiriman</ion-label>
+      <ion-button slot="end" fill="clear" [ngStyle]="{'margin-right': '5px'}" [routerLink]="['/address']" (click)="dismiss()">
+        <ion-icon name="add-outline" slot="start"></ion-icon>
+        Tambah
+      </ion-button>
+    </ion-item-divider>
+
+    <ion-radio-group formControlName="shipping_to" [ngStyle]="{'width': '100%'}">
+      <ion-row class="ion-no-padding">
+        <ion-col size="6" *ngFor="let item of shippingTo" [ngStyle]="{'padding-left': 0, 'padding-right': 0}">
+          <ion-item class="ion-item-small" lines="none">
+            <ion-label>{{ item.label }}</ion-label>
+            <ion-radio slot="start" value="{{ item.id }}"></ion-radio>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-radio-group>
+  </form>
+</ion-content>

@@ -1,0 +1,38 @@
+<div *ngIf="isLoading" class="p-4 d-flex w-100 align-item-center justify-content-center h-100">
+  <ion-spinner></ion-spinner>
+</div>
+
+<ion-item *ngIf="!isLoading && itemData.count == 0 && page === 'purchase'" lines="full">
+  Belanjaan kosong, tap tombol "+" untuk menambahkan.
+</ion-item>
+
+<ion-item *ngIf="!isLoading && itemData.count == 0 && page === 'history'" lines="full">
+  Riwayat belanja kosong.
+</ion-item>
+
+<ion-list *ngIf="itemList && !isLoading" class="ion-no-padding">
+  <ion-item *ngFor="let item of itemList" [routerLink]="['/purchase', item.uuid]" lines="full" detail>
+    <ion-label class="ion-text-wrap">
+      <strong>{{ item.label }}</strong>
+
+      <div [ngStyle]="{'margin-top.px': 2}">
+        <ion-text color="medium">
+          {{ item.schedule|date: 'EE, dd MMMM yyyy' }}
+        </ion-text>
+      </div>
+    </ion-label>
+
+    <ion-note class="d-flex align-items-center h-100">
+      <ion-text color="medium" class="mr-1">
+        {{ item.status_display }}
+      </ion-text>
+    </ion-note>
+  </ion-item>
+</ion-list>
+
+<ion-infinite-scroll *ngIf="itemData && itemData.count > itemData.per_page && itemList && !isLoading" threshold="100px" (ionInfinite)="loadMore($event)">
+  <ion-infinite-scroll-content
+    loadingSpinner="bubbles"
+    loadingText="Memuat berikutnya...">
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>

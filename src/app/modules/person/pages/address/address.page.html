@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/account"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title size="small" class="ion-padding-start-small">Alamat Pengantaran</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="addAddress()">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        <span>Tambah</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="isOnLoading" class="d-flex w-100 h-100 align-items-center justify-content-center">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ion-list *ngIf="!isOnLoading && addressList.length > 0">
+    <ion-item *ngFor="let item of addressList" lines="full">
+      <ion-label class="ion-text-wrap font-weight-bold">
+        {{ item.label }}
+        <p *ngIf="item.is_default" class="font-weight-normal">Alamat Utama</p>
+      </ion-label>
+
+      <ion-note slot="end" class="pl-0">
+        <ion-button fill="clear" color="danger" (click)="delete(item)">Hapus</ion-button>
+        <ion-button fill="clear" (click)="updateAddress(item)">Edit</ion-button>
+      </ion-note>
+    </ion-item>
+  </ion-list>
+
+  <ion-grid *ngIf="!isOnLoading && addressList.length == 0" class="h-100 ion-padding">
+    <ion-row class="ion-justify-content-center ion-align-items-center h-100">
+      <ion-col>
+        <div class="ion-text-center">
+          <ion-icon size="large" name="information-circle-outline"></ion-icon>
+          <br />
+          Tambahkan alamat pengantaran.
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

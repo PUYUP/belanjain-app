@@ -1,0 +1,124 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons *ngIf="!showSearch" slot="start">
+      <ion-back-button defaultHref="/purchase/{{ purchaseUUID }}/goods"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title *ngIf="!showSearch" size="small" class="ion-padding-start-small">Katalog</ion-title>
+
+    <ion-buttons *ngIf="!showSearch" slot="end">
+      <ion-button *ngIf="!showCategory" (click)="openCategory()">
+        <ion-icon slot="icon-only" name="grid-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button *ngIf="showCategory" (click)="closeCategory()">
+        <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button (click)="openSearch()">
+        <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-searchbar *ngIf="showSearch" placeholder="Cari barang" showCancelButton="always" (ionCancel)="closeSeach()"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="!showCategory" class="ion-no-padding">
+    <ion-item-divider color="light">
+      <ion-label>
+        Tambah barang kebutuhan <u>Dapur</u>
+
+        <p *ngIf="goodsSelected.length > 0" class="mb-0 font-weight-bolder d-flex align-items-center">
+          <ion-icon name="basket-outline" [ngStyle]="{'font-size': '20px'}" class="mr-1"></ion-icon>
+          {{ goodsSelected.length }} barang dipilih
+        </p>
+      </ion-label>
+
+      <ion-note *ngIf="goodsSelected.length > 0 && !isReview" slot="end" [ngStyle]="{'margin-left': 0}" class="ion-padding-end">
+        <ion-button color="tertiary" (click)="review()">Tinjau</ion-button>
+      </ion-note>
+
+      <ion-note *ngIf="goodsSelected.length > 0 && isReview" slot="end" [ngStyle]="{'margin-left': 0}" class="ion-padding-end">
+        <ion-button color="dark" (click)="closeReview()">Pilih Lagi</ion-button>
+        <ion-button color="success" (click)="closeReview()">Selesai</ion-button>
+      </ion-note>
+    </ion-item-divider>
+
+    <ion-item *ngFor="let item of goods" lines="full">
+      <ion-thumbnail slot="start" (click)="selectItem(item)">
+        <img src="{{ item.picture }}">
+      </ion-thumbnail>
+
+      <ion-label class="ion-text-wrap" (click)="selectItem(item)">
+        <p><ion-text color="dark">{{ item.label }}</ion-text></p>
+        <ion-text *ngIf="item.is_selected">{{ item.quantity }} {{ item.metric.label }}</ion-text>
+      </ion-label>
+
+      <ion-note slot="end" [ngStyle]="{'margin-left': 0}">
+        <ion-button *ngIf="!item.is_selected" fill="outline" [ngStyle]="{'width': '50px'}"
+          (click)="selectItem(item)">Pilih</ion-button>
+
+        <ion-button *ngIf="item.is_selected" fill="clear" color="danger" class="ion-no-border"
+          (click)="selectItem(item, true)">
+          <ion-icon slot="icon-only" name="trash-bin-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button *ngIf="item.is_selected" fill="outline" color="medium"
+          [ngStyle]="{'width': '50px', 'margin-left': '5px'}"
+          (click)="selectItem(item)">Edit</ion-button>
+      </ion-note>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="showCategory" class="ion-no-padding">
+    <ion-item-divider color="light">
+      <ion-label>Cari barang berdasarkan kategori</ion-label>
+    </ion-item-divider>
+  </ion-list>
+
+  <ion-grid *ngIf="showCategory">
+    <ion-row class="ion-align-items-stretch">
+      <ion-col size="6">
+        <div class="ratio ratio-4-by-3">
+          <div class="ratio-inner">
+            <div class="d-flex w-100 h-100 border align-items-center justify-content-center">
+              Camilan
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+      <ion-col size="6">
+        <div class="ratio ratio-4-by-3">
+          <div class="ratio-inner">
+            <div class="d-flex w-100 h-100 border align-items-center justify-content-center">
+              Bahan Pokok
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+      <ion-col size="6">
+        <div class="ratio ratio-4-by-3">
+          <div class="ratio-inner">
+            <div class="d-flex w-100 h-100 border align-items-center justify-content-center">
+              Kebersihan
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+      <ion-col size="6">
+        <div class="ratio ratio-4-by-3">
+          <div class="ratio-inner">
+            <div class="d-flex w-100 h-100 border align-items-center justify-content-center">
+              Lain-lain
+            </div>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

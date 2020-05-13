@@ -1,0 +1,100 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title size="small">Mendaftar</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/login']">
+        <ion-icon name="log-in" slot="start"></ion-icon>
+        Masuk
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-top">
+  <div class="ion-padding">
+    <ion-text color="muted">
+      Hay, terima kasih sudah sampai sini. Izinkan kami melayani kebutuhan Anda.
+    </ion-text>
+  </div>
+
+  <form [formGroup]="formFactory" (ngSubmit)="onSubmit()">
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-icon name="at" slot="start" class="mr-3"></ion-icon>
+        <ion-label position="floating">Nama Pengguna</ion-label>
+        <ion-input formControlName="username" pattern="[a-zA-Z]*" autocapitalize="false"
+          placeholder="Harus unik dan mudah diingat"></ion-input>
+      </ion-item>
+
+      <div *ngIf="fmControl.username.errors?.minlength" class="ion-padding-start ion-padding-end">
+        <ion-text color="danger"><small>Minimal 4 huruf tanpa spasi.</small></ion-text>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-icon name="person" slot="start" class="mr-3"></ion-icon>
+        <ion-label position="floating">Nama Lengkap</ion-label>
+        <ion-input formControlName="first_name" pattern="[a-zA-Z ]*" autocapitalize="true"
+          placeholder="Nama lengkap sesuai KTP"></ion-input>
+      </ion-item>
+
+      <div *ngIf="fmControl.first_name.errors?.minlength" class="ion-padding-start ion-padding-end">
+        <ion-text color="danger"><small>Minimal 4 huruf.</small></ion-text>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-icon name="call" slot="start" class="mr-3"></ion-icon>
+        <ion-label position="floating">Nomor Ponsel</ion-label>
+        <ion-input inputmode="tel" formControlName="telephone" pattern="[0-9 ]*"
+          placeholder="Harus aktif ya"></ion-input>
+      </ion-item>
+
+      <div *ngIf="!fmControl.telephone.errors?.pattern && fmControl.telephone.errors?.minlength" class="ion-padding-start ion-padding-end">
+        <ion-text color="danger"><small>Minimal 8 angka.</small></ion-text>
+      </div>
+
+      <div *ngIf="fmControl.telephone.errors?.pattern" class="ion-padding-start ion-padding-end">
+        <ion-text color="danger"><small>Hanya boleh angka.</small></ion-text>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-icon name="key" slot="start" class="mr-3"></ion-icon>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input type="password" inputmode="password" formControlName="password"
+          placeholder="Perlindungan akun, harus kuat!"></ion-input>
+      </ion-item>
+
+      <div *ngIf="fmControl.password.errors?.minlength && !fmControl.password_confirm.errors?.mustMatch" class="ion-padding-start ion-padding-end">
+        <ion-text color="danger"><small>Minimal 6 karakter.</small></ion-text>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <ion-item lines="full">
+        <ion-icon name="key" slot="start" class="mr-3"></ion-icon>
+        <ion-label position="floating">Ulangi Password</ion-label>
+        <ion-input type="password" inputmode="password" formControlName="password_confirm"
+          placeholder="Konfirmasi password"></ion-input>
+      </ion-item>
+
+      <div *ngIf="fmControl.password_confirm.errors?.minlength && !fmControl.password_confirm.errors?.mustMatch" class="ion-padding-start ion-padding-end">
+        <ion-text color="danger"><small>Minimal 6 karakter.</small></ion-text>
+      </div>
+
+      <div *ngIf="fmControl.password_confirm.errors?.mustMatch" class="ion-padding-start ion-padding-end">
+        <ion-text color="danger"><small>Password tidak sama.</small></ion-text>
+      </div>
+    </div>
+
+    <ion-button type="submit" expand="block" class="ion-margin" [disabled]="!formFactory.valid || isLoading || isLoginLoading">
+      <ion-text *ngIf="!isLoading && !isLoginLoading">Daftar</ion-text>
+      <ion-spinner *ngIf="isLoading || isLoginLoading"></ion-spinner>
+    </ion-button>
+  </form>
+</ion-content>

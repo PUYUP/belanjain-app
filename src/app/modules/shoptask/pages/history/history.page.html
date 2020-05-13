@@ -1,0 +1,17 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title size="small">
+      Riwayat Belanja
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="refresh()">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <purchase-list-component [status]="status" [purchase]="purchase" [page]="'history'"></purchase-list-component>
+</ion-content>
